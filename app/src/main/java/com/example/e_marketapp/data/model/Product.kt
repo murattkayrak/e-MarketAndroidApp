@@ -1,4 +1,4 @@
-package com.example.e_marketapp.model
+package com.example.e_marketapp.data.model
 
 data class Product(
     val id: String?,
