@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.e_marketapp.R
+import com.example.e_marketapp.data.model.Product
 import com.example.e_marketapp.databinding.FragmentCartBinding
 import com.example.e_marketapp.databinding.FragmentHomeBinding
 import com.example.e_marketapp.ui.activity.MainActivity
@@ -65,11 +66,28 @@ class CartFragment : Fragment() {
             cartViewModel.cartUIState.collectLatest { uiState ->
                 binding?.recyclerView?.adapter = CartAdapter(
                     productList = uiState.productList,
-//                    productOnClick = ::navigateToProductFragment,
-//                    addToCartOnClick = ::addToCartOnClick,
+                    addToCartOnClick = ::addToCartOnClick,
+                    removeFromCartOnClick = ::removeFromCartOnClick,
                 )
             }
         }
+    }
+
+    private fun addToCartOnClick(product: Product) {
+        (activity as MainActivity).addToCart(
+            product = product,
+            onClick = {
+                cartViewModel.getCartProducts(activity = activity as MainActivity)
+            },
+        )
+    }
+
+    private fun removeFromCartOnClick(product: Product) {
+        (activity as MainActivity).removeFromCart(
+            product = product,
+            onClick = {
+                cartViewModel.getCartProducts(activity = activity as MainActivity)
+            },)
     }
 
     override fun onDestroyView() {

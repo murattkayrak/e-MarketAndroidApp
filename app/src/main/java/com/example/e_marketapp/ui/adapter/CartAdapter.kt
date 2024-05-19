@@ -8,19 +8,15 @@ import com.example.e_marketapp.databinding.ItemProductCartBinding
 
 class CartAdapter(
     private val productList: List<Product>,
-//    val productOnClick: (product: Product) -> Unit,
-//    val addToCartOnClick: (product: Product) -> Unit,
+    val addToCartOnClick: (product: Product) -> Unit,
+    val removeFromCartOnClick: (product: Product) -> Unit,
 ) : RecyclerView.Adapter<CartAdapter.ProductViewHolder>() {
 
     inner class ProductViewHolder(private val binding: ItemProductCartBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(product: Product) {
-//            binding.productLayout.setOnClickListener { productOnClick.invoke(product) }
+            binding.addToCart.setOnClickListener { addToCartOnClick.invoke(product) }
+            binding.removeFromCart.setOnClickListener { removeFromCartOnClick.invoke(product) }
             binding.product = product
-//            binding.addToCart.setOnClickListener { addToCartOnClick.invoke(product) }
-//            Glide.with(binding.productImage.context)
-//                .load(product.image)
-//                .skipMemoryCache(true)
-//                .into(binding.productImage)
             binding.executePendingBindings()
         }
     }

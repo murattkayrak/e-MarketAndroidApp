@@ -101,7 +101,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun addToCartOnClick(product: Product) {
-        (activity as MainActivity).addToCart(product)
+        (activity as MainActivity).addToCart(product = product, onClick = {})
     }
 
     companion object {

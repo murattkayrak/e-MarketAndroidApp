@@ -35,16 +35,28 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    fun addToCart(product: Product) {
-        product.quantity = 1
+    fun addToCart(product: Product, onClick: () -> Unit) {
+        product.quantity = (product.quantity ?: 0) .plus(1)
         lifecycleScope.launch {
             MarketApplication.database.productDao().insertProduct(product)
+            onClick.invoke()
         }
     }
 
-    fun removeFromCart(product: Product) {
-        lifecycleScope.launch {
-            MarketApplication.database.productDao().removeProduct(product)
+    fun removeFromCart(product: Product, onClick: () -> Unit) {
+        product.quantity?.let { quantity ->
+            if (quantity > 1) {
+                product.quantity = product.quantity?.minus(1)
+                lifecycleScope.launch {
+                    MarketApplication.database.productDao().insertProduct(product)
+                    onClick.invoke()
+                }
+            } else {
+                lifecycleScope.launch {
+                    MarketApplication.database.productDao().removeProduct(product)
+                    onClick.invoke()
+                }
+            }
         }
     }
 
