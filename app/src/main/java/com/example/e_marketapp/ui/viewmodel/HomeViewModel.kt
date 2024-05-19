@@ -2,8 +2,8 @@ package com.example.e_marketapp.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.e_marketapp.MarketApplication
 import com.example.e_marketapp.data.domain.RetrofitClient
-import com.example.e_marketapp.data.model.Product
 import com.example.e_marketapp.data.repository.ProductRepository
 import com.example.e_marketapp.ui.state.HomeUIState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,9 +25,27 @@ class HomeViewModel : ViewModel() {
             _homeUIState.update { currentState ->
                 currentState.copy(
                     productList = products,
+                    backupProductList = products,
                     title = "productList[0].description",
                 )
             }
+            MarketApplication.database.productDao().insertProducts(products)
+        }
+    }
+
+    fun filterProducts(query: String) {
+        _homeUIState.update { currentState ->
+            currentState.copy(
+                productList = homeUIState.value.backupProductList,
+            )
+        }
+        val list = _homeUIState.value.productList.filter {
+            it.name!!.contains(query, ignoreCase = true)
+        }
+        _homeUIState.update { currentState ->
+            currentState.copy(
+                productList = ArrayList(list),
+            )
         }
     }
 }

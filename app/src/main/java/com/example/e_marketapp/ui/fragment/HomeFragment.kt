@@ -4,19 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.e_marketapp.R
-import com.example.e_marketapp.data.domain.RetrofitClient
 import com.example.e_marketapp.data.model.Product
-import com.example.e_marketapp.data.repository.ProductRepository
 import com.example.e_marketapp.databinding.FragmentHomeBinding
+import com.example.e_marketapp.ui.adapter.ProductAdapter
 import com.example.e_marketapp.ui.viewmodel.HomeViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
@@ -59,15 +58,41 @@ class HomeFragment : Fragment() {
         binding?.viewModel = homeViewModel
         binding?.lifecycleOwner = viewLifecycleOwner
         homeViewModel.getProductFromService()
-    }
 
+        binding?.recyclerView?.layoutManager = GridLayoutManager(context, 2)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.homeUIState.collectLatest { uiState ->
+                binding?.recyclerView?.adapter = ProductAdapter(uiState.productList, ::navigateToProductFragment)
+            }
+        }
+
+        binding?.searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (!query.isNullOrEmpty()) {
+                    homeViewModel.filterProducts(query)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (!newText.isNullOrEmpty()) {
+                    homeViewModel.filterProducts(newText)
+                }
+                return true
+            }
+        })
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
     }
-    fun navigateToProductFragment() {
-        findNavController().navigate(R.id.action_homeFragment_to_productFragment)
+
+    private fun navigateToProductFragment(product: Product) {
+        val bundle = Bundle()
+        bundle.putParcelable("product", product)
+        findNavController().navigate(R.id.action_homeFragment_to_productFragment, bundle)
     }
 
     companion object {

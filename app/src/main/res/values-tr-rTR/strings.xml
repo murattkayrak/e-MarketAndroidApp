@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">e-MarketApp</string>
+    <string name="add_to_cart">Sepete Ekle</string>
+    <string name="price">Fiyat:</string>
+    <string name="filters">Filtreler:</string>
+    <string name="select_filter">Filtre Seç</string>
+</resources>
