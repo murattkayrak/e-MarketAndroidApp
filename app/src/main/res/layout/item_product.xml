@@ -27,6 +27,7 @@
             android:id="@+id/productPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/blue"
             android:text="@{String.valueOf(product.price)}" />
 
         <TextView
@@ -37,6 +38,7 @@
             android:text="@{product.name}" />
 
         <Button
+            android:id="@+id/addToCart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/add_to_cart"

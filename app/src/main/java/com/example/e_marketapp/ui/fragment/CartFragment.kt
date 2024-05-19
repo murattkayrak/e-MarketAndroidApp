@@ -1,20 +1,21 @@
 package com.example.e_marketapp.ui.fragment
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.e_marketapp.R
-import com.example.e_marketapp.data.model.Product
+import com.example.e_marketapp.databinding.FragmentCartBinding
 import com.example.e_marketapp.databinding.FragmentHomeBinding
 import com.example.e_marketapp.ui.activity.MainActivity
+import com.example.e_marketapp.ui.adapter.CartAdapter
 import com.example.e_marketapp.ui.adapter.ProductAdapter
+import com.example.e_marketapp.ui.viewmodel.CartViewModel
 import com.example.e_marketapp.ui.viewmodel.HomeViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -26,16 +27,16 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
+ * Use the [CartFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class HomeFragment : Fragment() {
+class CartFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
-    private var binding: FragmentHomeBinding? = null
-    private val homeViewModel: HomeViewModel by activityViewModels()
+    private var binding: FragmentCartBinding? = null
+    private val cartViewModel: CartViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,62 +47,34 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentCartBinding.inflate(inflater, container, false)
         return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.viewModel = homeViewModel
+        binding?.viewModel = cartViewModel
         binding?.lifecycleOwner = viewLifecycleOwner
-        homeViewModel.getProductFromService()
-
-        binding?.recyclerView?.layoutManager = GridLayoutManager(context, 2)
+        cartViewModel.getCartProducts(activity = activity as MainActivity)
+        binding?.recyclerView?.layoutManager = LinearLayoutManager(context)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            homeViewModel.homeUIState.collectLatest { uiState ->
-                binding?.recyclerView?.adapter = ProductAdapter(
+            cartViewModel.cartUIState.collectLatest { uiState ->
+                binding?.recyclerView?.adapter = CartAdapter(
                     productList = uiState.productList,
-                    productOnClick = ::navigateToProductFragment,
-                    addToCartOnClick = ::addToCartOnClick,
+//                    productOnClick = ::navigateToProductFragment,
+//                    addToCartOnClick = ::addToCartOnClick,
                 )
             }
         }
-
-        binding?.searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                if (!query.isNullOrEmpty()) {
-                    homeViewModel.filterProducts(query)
-                }
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if (!newText.isNullOrEmpty()) {
-                    homeViewModel.filterProducts(newText)
-                }
-                return true
-            }
-        })
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
-    }
-
-    private fun navigateToProductFragment(product: Product) {
-        val bundle = Bundle()
-        bundle.putParcelable("product", product)
-        findNavController().navigate(R.id.action_homeFragment_to_productFragment, bundle)
-    }
-
-    private fun addToCartOnClick(product: Product) {
-        (activity as MainActivity).addToCart(product)
     }
 
     companion object {
@@ -111,12 +84,12 @@ class HomeFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
+         * @return A new instance of fragment CartFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
+            CartFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

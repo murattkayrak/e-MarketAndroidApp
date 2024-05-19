@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "product")
 data class Product(
-    @PrimaryKey(autoGenerate = true) val productId: Long = 0,
-    val id: String?,
+    @PrimaryKey
+    val id: String,
     val brand: String?,
     val model: String?,
     val description: String?,
@@ -16,9 +16,10 @@ data class Product(
     val image: String?,
     val name: String?,
     val createdAt: String?,
+    var quantity: Int? = 0,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readLong(),
+        parcel.readString() ?: "",
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
@@ -26,12 +27,11 @@ data class Product(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readString()
+        parcel.readInt(),
     ) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeLong(productId)
         parcel.writeString(id)
         parcel.writeString(brand)
         parcel.writeString(model)
@@ -40,6 +40,7 @@ data class Product(
         parcel.writeString(image)
         parcel.writeString(name)
         parcel.writeString(createdAt)
+        parcel.writeInt(quantity ?: 0)
     }
 
     override fun describeContents(): Int {

@@ -2,7 +2,6 @@ package com.example.e_marketapp.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.e_marketapp.MarketApplication
 import com.example.e_marketapp.data.domain.RetrofitClient
 import com.example.e_marketapp.data.repository.ProductRepository
 import com.example.e_marketapp.ui.state.HomeUIState
@@ -26,10 +25,8 @@ class HomeViewModel : ViewModel() {
                 currentState.copy(
                     productList = products,
                     backupProductList = products,
-                    title = "productList[0].description",
                 )
             }
-            MarketApplication.database.productDao().insertProducts(products)
         }
     }
 

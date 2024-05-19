@@ -7,13 +7,17 @@ import com.bumptech.glide.Glide
 import com.example.e_marketapp.data.model.Product
 import com.example.e_marketapp.databinding.ItemProductBinding
 
-
-class ProductAdapter(private val productList: List<Product>, val productOnClick: (product: Product) -> Unit) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+class ProductAdapter(
+    private val productList: List<Product>,
+    val productOnClick: (product: Product) -> Unit,
+    val addToCartOnClick: (product: Product) -> Unit,
+) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     inner class ProductViewHolder(private val binding: ItemProductBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(product: Product) {
             binding.productLayout.setOnClickListener { productOnClick.invoke(product) }
             binding.product = product
+            binding.addToCart.setOnClickListener { addToCartOnClick.invoke(product) }
             Glide.with(binding.productImage.context)
                 .load(product.image)
                 .skipMemoryCache(true)

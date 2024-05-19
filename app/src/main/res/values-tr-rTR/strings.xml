@@ -5,4 +5,6 @@
     <string name="price">Fiyat:</string>
     <string name="filters">Filtreler:</string>
     <string name="select_filter">Filtre Seç</string>
+    <string name="complete">Tamamla</string>
+    <string name="total">Toplam</string>
 </resources>
