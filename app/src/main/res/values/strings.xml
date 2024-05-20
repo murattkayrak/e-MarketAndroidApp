@@ -6,4 +6,5 @@
     <string name="select_filter">Select Filter</string>
     <string name="complete">Complete</string>
     <string name="total">Total</string>
+    <string name="filter">Filter</string>
 </resources>

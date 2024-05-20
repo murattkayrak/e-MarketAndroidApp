@@ -11,6 +11,7 @@ import com.example.e_marketapp.R
 import com.example.e_marketapp.data.model.Product
 import com.example.e_marketapp.databinding.FragmentHomeBinding
 import com.example.e_marketapp.databinding.FragmentProductBinding
+import com.example.e_marketapp.ui.activity.MainActivity
 import com.example.e_marketapp.ui.viewmodel.HomeViewModel
 import com.example.e_marketapp.ui.viewmodel.ProductViewModel
 
@@ -62,12 +63,18 @@ class ProductFragment : Fragment() {
         }
         binding?.viewModel = productViewModel
         binding?.lifecycleOwner = viewLifecycleOwner
+        binding?.addToCart?.setOnClickListener { addToCartOnClick() }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
     }
+
+    private fun addToCartOnClick() {
+        product?.let { (activity as MainActivity).addToCart(product = it, onClick = {}) }
+    }
+
     companion object {
         /**
          * Use this factory method to create a new instance of

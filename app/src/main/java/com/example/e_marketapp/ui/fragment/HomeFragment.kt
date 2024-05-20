@@ -87,6 +87,11 @@ class HomeFragment : Fragment() {
                 return true
             }
         })
+
+        binding?.selectFilterButton?.setOnClickListener {
+            val filterDialog = FilterDialogFragment()
+            filterDialog.show(parentFragmentManager, "FilterDialog")
+        }
     }
 
     override fun onDestroyView() {

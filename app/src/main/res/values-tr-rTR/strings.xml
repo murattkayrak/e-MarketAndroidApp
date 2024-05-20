@@ -7,4 +7,5 @@
     <string name="select_filter">Filtre Seç</string>
     <string name="complete">Tamamla</string>
     <string name="total">Toplam</string>
+    <string name="filter">Filtre</string>
 </resources>
